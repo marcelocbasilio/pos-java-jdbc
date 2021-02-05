@@ -15,9 +15,8 @@ public class TesteBancoJdbc {
 		UserPosDAO userPosDAO = new UserPosDAO();
 		Userposjava userPosJava = new Userposjava();
 		
-		userPosJava.setId(3L);
-		userPosJava.setNome("Anna Clara de Carvalho Basilio");
-		userPosJava.setEmail("annaclaradecarvalhobasilio@gmail.com");
+		userPosJava.setNome("Marcelo Cordeiro Basílio");
+		userPosJava.setEmail("marcelocbasilio@outlook.com");
 		
 		userPosDAO.salvar(userPosJava);
 	}
@@ -57,10 +56,20 @@ public class TesteBancoJdbc {
 		UserPosDAO dao = new UserPosDAO();
 		
 		try {
-			Userposjava objetoBanco = dao.buscar(3L);
-			objetoBanco.setNome("Anna Clara de Carvalho Bas�lio");
+			Userposjava objetoBanco = dao.buscar(1L);
+			objetoBanco.setNome("Marcelo Cordeiro Basílio");
 			
 			dao.atualizar(objetoBanco);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void initDeletar() {
+		try {
+			UserPosDAO dao = new UserPosDAO();
+			dao.deletar(6L);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

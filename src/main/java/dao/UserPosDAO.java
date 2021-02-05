@@ -21,11 +21,11 @@ public class UserPosDAO {
 	public void salvar(Userposjava userposjava) {
 		
 		try {
-			String sql = "INSERT INTO public.userposjava(id, nome, email) VALUES (?, ?, ?);";
+			String sql = "INSERT INTO public.userposjava(nome, email) VALUES (?, ?);";
 			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setLong(1, userposjava.getId());
-			ps.setString(2, userposjava.getNome());
-			ps.setString(3, userposjava.getEmail());
+			
+			ps.setString(1, userposjava.getNome());
+			ps.setString(2, userposjava.getEmail());
 			ps.execute();
 			connection.commit();
 		} catch (Exception e) {
@@ -82,9 +82,10 @@ public class UserPosDAO {
 	public void atualizar(Userposjava userposjava) {
 		
 		try {
-			String sql = "UPDATE public.userposjava SET nome = ? WHERE id = " + userposjava.getId();
+			String sql = "UPDATE public.userposjava SET nome = ?, email = ? WHERE id = " + userposjava.getId();
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, userposjava.getNome());
+			ps.setString(2, userposjava.getEmail());
 			ps.execute();
 			connection.commit();
 		} catch (Exception e) {
@@ -95,5 +96,23 @@ public class UserPosDAO {
 			}
 			e.printStackTrace();
 		}
+	}
+	
+	public void deletar(Long id) {
+		
+		try {
+			String sql = "DELETE FROM userposjava WHERE id = " + id;
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.execute();
+			connection.commit();
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		
 	}
 }
