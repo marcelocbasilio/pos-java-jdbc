@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import conexao.jdbc.SingleConnection;
+import model.BeanUserFone;
+import model.Telefone;
 import model.Userposjava;
 
 public class UserPosDAO {
@@ -37,6 +39,27 @@ public class UserPosDAO {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void salvarTelefone(Telefone telefone) {
+		try {
+			String sql = "INSERT INTO public.telefoneuser(numero, tipo, usuariopessoa) VALUES (?, ?, ?);";
+			PreparedStatement ps = connection.prepareStatement(sql);
+			
+			ps.setString(1, telefone.getNumero());
+			ps.setString(2, telefone.getTipo());
+			ps.setLong(3, telefone.getUsuario());
+			ps.execute();
+			
+			connection.commit();
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 	}
 	
 	public List<Userposjava> listar() throws Exception {
@@ -78,6 +101,32 @@ public class UserPosDAO {
 		
 		return retorno;
 	}
+	
+	public List<BeanUserFone> listaUserFone(Long idUser) {
+		
+		List<BeanUserFone> beanUserFones = new ArrayList<BeanUserFone>();
+		
+		String sql = "SELECT public.userposjava.nome, public.telefoneuser.numero, public.userposjava.email FROM public.userposjava\r\n"
+				+ "INNER JOIN public.telefoneuser ON public.userposjava.id = public.telefoneuser.usuariopessoa\r\n"
+				+ "WHERE public.userposjava.id = " + idUser +";";
+		
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				BeanUserFone userFone = new BeanUserFone();
+				userFone.setNome(rs.getString("nome"));
+				userFone.setNumero(rs.getString("numero"));
+				userFone.setEmail(rs.getString("email"));
+				beanUserFones.add(userFone);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return beanUserFones;
+	}
 
 	public void atualizar(Userposjava userposjava) {
 		
@@ -114,5 +163,30 @@ public class UserPosDAO {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void deleteFonesPorUser(Long idUser) {
+		
+		try {
+			String sqlFone = "DELETE FROM public.telefoneuser WHERE usuariopessoa = " + idUser + ";";
+			String sqlUser = "DELETE FROM public.userposjava WHERE id = " + idUser + ";";
+			
+			PreparedStatement ps = connection.prepareStatement(sqlFone);
+			ps.executeUpdate();
+			connection.commit();
+			
+			ps = connection.prepareStatement(sqlUser);
+			ps.executeUpdate();
+			connection.commit();
+			
+			
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 	}
 }

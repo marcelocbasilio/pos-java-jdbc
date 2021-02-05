@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.Test;
 
 import dao.UserPosDAO;
+import model.BeanUserFone;
 import model.Userposjava;
 
 public class ListarBancoJdbc {
@@ -22,6 +23,19 @@ public class ListarBancoJdbc {
 		
 		} catch(Exception e) {
 			e.printStackTrace(); 
+		}
+	}
+	
+	@Test
+	public void testeCarregaFonesUser() {
+		
+		UserPosDAO dao = new UserPosDAO();
+		
+		List<BeanUserFone> beanUserFones = dao.listaUserFone(3L);
+		
+		for(BeanUserFone beanUserFone : beanUserFones) {
+			System.out.println(beanUserFone);
+			System.out.println("------------------------------------------");
 		}
 	}
 	

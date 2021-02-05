@@ -16,4 +16,12 @@ public class DeletarBancoJdbc {
 		}
 	}
 	
+	@Test
+	public void testeDeleteUserFone() {
+		
+		UserPosDAO dao = new UserPosDAO();
+		dao.deleteFonesPorUser(3L);
+		
+	}
+	
 }
